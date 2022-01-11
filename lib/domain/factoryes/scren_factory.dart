@@ -5,7 +5,7 @@ import 'package:lazy_post/ui/widgets/map/map_screen.dart';
 import 'package:lazy_post/ui/widgets/logistic_list/logistic_list_model.dart';
 import 'package:lazy_post/ui/widgets/logistic_list/logistic_list_screen.dart';
 import 'package:lazy_post/ui/widgets/searching_results/searching_results_screen.dart';
-import 'package:lazy_post/ui/widgets/searching_results/sesearching_results_model.dart';
+import 'package:lazy_post/ui/widgets/searching_results/searching_results_model.dart';
 import '/ui/widgets/home/home_screen.dart';
 
 import '/ui/widgets/loader/loader_view_model.dart';
@@ -46,7 +46,7 @@ class ScreenFactory {
   Widget makeSearchingResultsScreen(Logistic logistic) {
     return ChangeNotifierProvider(
       create: (_) => SesearchingResultsViewModel(logistic),
-      child: SesearchingResultsScreen() ,
+      child: SearchingResultsScreen() ,
     );
   }
 
