@@ -1,9 +1,6 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lazy_post/domain/entity/logistic.dart';
-import 'package:lazy_post/domain/entity/point.dart';
-import 'package:lazy_post/domain/service/logistic_service.dart';
 import 'package:lazy_post/ui/navigation/main_navigation.dart';
 
 class LogisticListViewModel extends ChangeNotifier{

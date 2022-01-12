@@ -8,28 +8,25 @@ import 'package:provider/src/provider.dart';
 class SearchingResultsScreen extends StatelessWidget {
   SearchingResultsScreen({Key? key}) : super(key: key);
   final Completer<GoogleMapController> _controller = Completer();
-
-
+  
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<SesearchingResultsViewModel>();
+    final model = context.watch<SearchingResultsViewModel>();
     return MaterialApp(
-      //title: 'Flutter Google Maps Demo',
         home: Scaffold(
-          body:
-
-
+          body: model.loading ? const Center(
+            child: CircularProgressIndicator(),
+          ) :
               GoogleMap(
                   mapType: MapType.normal,
-                  initialCameraPosition: model.startPoint,
+                  initialCameraPosition: CameraPosition(target: model.receiverPoint, zoom: 15),
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
                   },
-
                   myLocationButtonEnabled: false,
                   myLocationEnabled: false,
                   markers: model.from.map((e) => e).toSet(),
-                  padding: const EdgeInsets.only(bottom: 70.0, right: 7)),
+                  padding: const EdgeInsets.only(bottom: 0, right: 0)),
 
         ));
   }

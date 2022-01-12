@@ -1,7 +1,4 @@
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lazy_post/domain/entity/logistic.dart';
-
 import '/domain/factoryes/scren_factory.dart';
 import 'package:flutter/material.dart';
 
@@ -12,10 +9,6 @@ abstract class MainNavigationRouteNames {
   static const mapScreen = '/home/map';
   static const logisticList = '/home/logistic_list';
   static const searchingResults = '/home/logistic_list/searching_results';
-
-  // static const mainScreen = '/main_screen';
-  // static const movieDetails = '/main_screen/movie_details';
-  // static const movieTrailerWidget = '/main_screen/movie_details/trailer';
 }
 
 class MainNavigation {
@@ -24,7 +17,6 @@ class MainNavigation {
   final routes = <String, Widget Function(BuildContext)>{
     MainNavigationRouteNames.loaderWidget: (_) => _screenFactory.makeLoader(),
     MainNavigationRouteNames.homeScreen: (_) => _screenFactory.makeHomeScreen(),
-    //MainNavigationRouteNames.mapScreen: (_) => _screenFactory.makeMapScreen(whom),
   };
   Route<Object> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {

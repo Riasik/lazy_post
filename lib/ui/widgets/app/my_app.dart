@@ -20,15 +20,7 @@ class MyApp extends StatelessWidget {
           unselectedItemColor: Colors.grey,
         ),
       ),
-      // localizationsDelegates: const [
-      //   GlobalMaterialLocalizations.delegate,
-      //   GlobalWidgetsLocalizations.delegate,
-      //   GlobalCupertinoLocalizations.delegate,
-      // ],
-      // supportedLocales: const [
-      //   Locale('ru', 'RU'),
-      //   Locale('en', ''),
-      // ],
+
       routes: mainNavigation.routes,
       initialRoute: MainNavigationRouteNames.loaderWidget,
       onGenerateRoute: mainNavigation.onGenerateRoute,

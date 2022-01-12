@@ -45,7 +45,7 @@ class ScreenFactory {
   }
   Widget makeSearchingResultsScreen(Logistic logistic) {
     return ChangeNotifierProvider(
-      create: (_) => SesearchingResultsViewModel(logistic),
+      create: (_) => SearchingResultsViewModel(logistic),
       child: SearchingResultsScreen() ,
     );
   }

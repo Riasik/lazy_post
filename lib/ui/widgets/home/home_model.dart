@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lazy_post/configuration/consts.dart';
 import 'package:lazy_post/domain/api_client/api_client_exception.dart';
+import 'package:lazy_post/domain/db/local_storage.dart';
+import 'package:lazy_post/domain/db/parcel_db.dart';
 import 'package:lazy_post/domain/entity/parcel.dart';
 import 'package:lazy_post/domain/service/logistic_service.dart';
 import 'package:lazy_post/ui/navigation/main_navigation.dart';
 
 class HomeViewModel extends ChangeNotifier {
   final _logisticService = LogisticService();
+  final _localStorage = LocalStorage();
   double weight = 0.1;
   double senderDistance = 0.5;
   double receiverDistance = 0.5;
@@ -21,9 +24,9 @@ class HomeViewModel extends ChangeNotifier {
 
   void calculateVolume() {
     volumeTextController.text = ((double.parse(lengthTextController.text) *
-                double.parse(widthTextController.text) *
-                double.parse(heightTextController.text)) /
-            1000000)
+        double.parse(widthTextController.text) *
+        double.parse(heightTextController.text)) /
+        1000000)
         .toString();
     _updateState();
   }
@@ -36,26 +39,27 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   void checkLogisticResult(BuildContext context) async {
+    Parcel p = Parcel(
+        weight: weight,
+        length: double.parse(lengthTextController.text),
+        price: double.parse(priceTextController.text),
+        width: double.parse(widthTextController.text),
+        height: double.parse(heightTextController.text),
+        volume: double.parse(volumeTextController.text),
+        senderLat: senderLat,
+        senderLng: senderLng,
+        senderDistance: senderDistance,
+        receiverLat: receiverLat,
+        receiverLng: receiverLng,
+        receiverDistance: receiverDistance);
+    saveToHistory(p);
     try {
-      var response = await _logisticService.logistics(Parcel(
-          weight: weight,
-          length: double.parse(lengthTextController.text),
-          price: double.parse(priceTextController.text),
-          width: double.parse(widthTextController.text),
-          height: double.parse(heightTextController.text),
-          volume: double.parse(volumeTextController.text),
-          senderLat: senderLat,
-          senderLng: senderLng,
-          senderDistance: senderDistance,
-          receiverLat: receiverLat,
-          receiverLng: receiverLng,
-          receiverDistance: receiverDistance));
+      var response = await _logisticService.logistics(p);
       if (response.data.isNotEmpty) {
         Navigator.of(context).pushNamed(
           MainNavigationRouteNames.logisticList,
-          arguments: response.data,
-        );
-      } else {
+          arguments: response.data);
+        } else {
         errMessage = 'Ошибка!';
       }
     } on ApiClientException catch (e) {
@@ -71,20 +75,32 @@ class HomeViewModel extends ChangeNotifier {
     return receiverLat != null && receiverLng != null ? true : false;
   }
 
-  Future<void> setPosition(BuildContext context,{required String whom}) async {
-      if(whom == Const.sender){
-        LatLng location = await Navigator.of(context).pushNamed(MainNavigationRouteNames.mapScreen,
-            arguments: whom) as LatLng;
-        senderLat = location.latitude;
-        senderLng = location.longitude;
-        _updateState();
-      }else if(whom == Const.receiver){
-        LatLng location = await Navigator.of(context).pushNamed(MainNavigationRouteNames.mapScreen,
-            arguments: whom) as LatLng;
-        receiverLat = location.latitude;
-        receiverLng = location.longitude;
-        _updateState();
-      }
+  String fun<T>(T a) => a != null && a != '' && a != 0 ? '' : 'error';
+
+  Future<void> setPosition(BuildContext context, {required String whom}) async {
+    if (whom == Const.sender) {
+      LatLng location = await Navigator.of(context).pushNamed(
+          MainNavigationRouteNames.mapScreen,
+          arguments: whom) as LatLng;
+      senderLat = location.latitude;
+      senderLng = location.longitude;
+      _updateState();
+    } else if (whom == Const.receiver) {
+      LatLng location = await Navigator.of(context).pushNamed(
+          MainNavigationRouteNames.mapScreen,
+          arguments: whom) as LatLng;
+      receiverLat = location.latitude;
+      receiverLng = location.longitude;
+      _updateState();
+    }
+  }
+
+  void saveToHistory(Parcel p){
+     ParcelDB.createParcel(p);
+    _localStorage.save('senderLat',p.senderLat!);
+    _localStorage.save('senderLng',p.senderLng!);
+    _localStorage.save('receiverLat',p.receiverLat!);
+    _localStorage.save('receiverLng',p.receiverLng!);
   }
 
   void _updateState() {

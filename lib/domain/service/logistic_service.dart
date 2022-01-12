@@ -1,6 +1,5 @@
 import 'package:lazy_post/configuration/configuration.dart';
 import 'package:lazy_post/domain/api_client/logistic_api_client.dart';
-import 'package:lazy_post/domain/entity/logistic.dart';
 import 'package:lazy_post/domain/entity/logistic_response.dart';
 import 'package:lazy_post/domain/entity/parcel.dart';
 
