@@ -1,26 +1,52 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lazy_post/configuration/consts.dart';
 import 'package:lazy_post/domain/db/local_storage.dart';
-import 'package:lazy_post/domain/db/parcel_db.dart';
 import 'package:lazy_post/domain/entity/logistic.dart';
-import 'package:lazy_post/domain/entity/parcel.dart';
 import 'package:lazy_post/domain/entity/point.dart';
 
 class SearchingResultsViewModel extends ChangeNotifier {
   final _localStorage = LocalStorage();
   final startPoint = const CameraPosition(target: Const.kiev, zoom: 10);
-  Logistic logistic;
+  final Logistic _logistic;
   late LatLng senderPoint, receiverPoint;
-  late List<Marker> from;
-  late List<Marker> to;
+  late List<Marker> currentList;
   bool loading = true;
+  final Completer<GoogleMapController> controller = Completer();
 
-  SearchingResultsViewModel(this.logistic){
-    from = convertToMarkers(logistic.from);
-    to = convertToMarkers(logistic.to);
+
+  //ui
+  int selectedTab = 0;
+  
+
+  SearchingResultsViewModel(this._logistic){
+    currentList = convertToMarkers([..._logistic.from, ..._logistic.to]);
     getPoints();
   }
+
+  void onChangePosition(int tab){
+    if(tab != selectedTab){
+      if(tab == 0){
+        _goToPlace(senderPoint);
+        selectedTab = 0;
+
+      }else{
+        _goToPlace(receiverPoint);
+        selectedTab = 1;
+      }
+      _updateState();
+    }
+  }
+
+  Future<void> _goToPlace(LatLng p) async{
+    final GoogleMapController c = await controller.future;
+    c.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: p,zoom: 13)));
+  }
+
+
+
   List<Marker> convertToMarkers(List<Point> list){
     List<Marker> result = [];
     for(Point point in list){

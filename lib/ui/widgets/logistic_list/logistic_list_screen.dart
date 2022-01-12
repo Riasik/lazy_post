@@ -5,31 +5,17 @@ import 'package:provider/src/provider.dart';
 
 import 'logistic_list_model.dart';
 
-class LogisticListScreen extends StatefulWidget {
+class LogisticListScreen extends StatelessWidget {
   const LogisticListScreen({Key? key}) : super(key: key);
-
-  @override
-  _LogisticListScreenState createState() => _LogisticListScreenState();
-}
-
-class _LogisticListScreenState extends State<LogisticListScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Компании'),
-        ),
-        body: const _LogisticListWidget());
-  }
-}
-
-class _LogisticListWidget extends StatelessWidget {
-  const _LogisticListWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final model = context.watch<LogisticListViewModel>();
-    return ListView.builder(
+    return Scaffold(
+        appBar: AppBar(
+        title: const Text('Компании'),
+    ),
+    body:  ListView.builder(
       padding: const EdgeInsets.only(top: 10),
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       itemCount: model.logistics.length,
@@ -37,7 +23,7 @@ class _LogisticListWidget extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return _LogisticListRowWidget(index: index);
       },
-    );
+    ));
   }
 }
 
@@ -52,12 +38,6 @@ class _LogisticListRowWidget extends StatelessWidget {
     final model = context.read<LogisticListViewModel>();
     final logistic = model.logistics[index];
     final imgUrl = model.getImageUrl(logistic.logisticId);
-
-    final fromPoints = createDropDownItems(model.logistics[index].from);
-    final toPoints = createDropDownItems(model.logistics[index].to);
-    // for select
-    // DropListModel dropListModel = DropListModel(fromPoints);
-    // OptionItem optionItemSelected = fromPoints[0];
 
 
     return Padding(
@@ -165,17 +145,4 @@ class _LogisticListRowWidget extends StatelessWidget {
       ),
     );
   }
-
-  List<DropdownMenuItem> createDropDownItems(List<Point> list) {
-    List<DropdownMenuItem> l = [];
-    for (var i in list) {
-      l.add(DropdownMenuItem<dynamic>(
-          child: Text('${i.pointNumber} (${i.dist.toStringAsFixed(2)} км)',
-            style: const TextStyle(fontSize: 10),
-          ),
-          value: i.pointNumber));
-    }
-    return l;
-  }
-
 }
