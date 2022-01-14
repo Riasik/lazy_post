@@ -1,4 +1,6 @@
 import 'package:lazy_post/domain/entity/logistic.dart';
+import 'package:lazy_post/ui/widgets/history/history_model.dart';
+import 'package:lazy_post/ui/widgets/history/history_screen.dart';
 import 'package:lazy_post/ui/widgets/home/home_model.dart';
 import 'package:lazy_post/ui/widgets/map/map_model.dart';
 import 'package:lazy_post/ui/widgets/map/map_screen.dart';
@@ -27,6 +29,12 @@ class ScreenFactory {
     return ChangeNotifierProvider(
       create: (_) => HomeViewModel(),
       child: const HomeScreenWidget(),
+    );
+  }
+  Widget makeHistoryScreen() {
+    return ChangeNotifierProvider(
+      create: (_) => HistoryViewModel(),
+      child: const HistoryScreen(),
     );
   }
 

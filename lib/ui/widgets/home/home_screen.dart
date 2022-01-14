@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lazy_post/configuration/consts.dart';
+import 'package:lazy_post/ui/navigation/main_navigation.dart';
 import 'package:lazy_post/ui/theme/app_colors.dart';
 import 'package:provider/src/provider.dart';
 import 'home_model.dart';
@@ -10,14 +11,16 @@ class HomeScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: _getAppBar(), body: const _Body());
+    return Scaffold(appBar: _getAppBar(context), body: const _Body());
   }
 
-  AppBar _getAppBar() {
+  AppBar _getAppBar(BuildContext context) {
     return AppBar(title: const Text('Lazy Post'), actions: [
       IconButton(
         icon: const Icon(Icons.history, color: Colors.white),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed(
+            MainNavigationRouteNames.homeHistory);},
       ),
     ]);
   }

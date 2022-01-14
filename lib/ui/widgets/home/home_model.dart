@@ -106,5 +106,7 @@ class HomeViewModel extends ChangeNotifier {
   void _updateState() {
     notifyListeners();
   }
+
+
 }
 

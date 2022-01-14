@@ -6,6 +6,7 @@ abstract class MainNavigationRouteNames {
   static const loaderWidget = '/';
   static const auth = '/auth';
   static const homeScreen = '/home';
+  static const homeHistory = '/home/history';
   static const mapScreen = '/home/map';
   static const logisticList = '/home/logistic_list';
   static const searchingResults = '/home/logistic_list/searching_results';
@@ -29,6 +30,10 @@ class MainNavigation {
       case MainNavigationRouteNames.mapScreen:
         return MaterialPageRoute(
           builder: (_) => _screenFactory.makeMapScreen(),
+        );
+        case MainNavigationRouteNames.homeHistory:
+        return MaterialPageRoute(
+          builder: (_) => _screenFactory.makeHistoryScreen(),
         );
       case MainNavigationRouteNames.searchingResults:
         final arguments = settings.arguments;

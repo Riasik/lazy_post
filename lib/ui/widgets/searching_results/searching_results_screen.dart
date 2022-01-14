@@ -50,6 +50,4 @@ class SearchingResultsScreen extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 0, right: 0)),
     );
   }
-
-  void onChangePosition() {}
 }
