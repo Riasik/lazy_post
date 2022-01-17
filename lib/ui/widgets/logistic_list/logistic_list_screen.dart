@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lazy_post/domain/entity/point.dart';
 import 'package:provider/src/provider.dart';
 
 import 'logistic_list_model.dart';
@@ -13,17 +12,32 @@ class LogisticListScreen extends StatelessWidget {
     final model = context.watch<LogisticListViewModel>();
     return Scaffold(
         appBar: AppBar(
-        title: const Text('Компании'),
-    ),
-    body:  ListView.builder(
-      padding: const EdgeInsets.only(top: 10),
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      itemCount: model.logistics.length,
-      itemExtent: 220,
-      itemBuilder: (BuildContext context, int index) {
-        return _LogisticListRowWidget(index: index);
-      },
-    ));
+          title: const Text('Компании'),
+        ),
+        body: model.loading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                padding: const EdgeInsets.only(top: 10),
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                itemCount: model.logistics.length,
+                itemExtent: 220,
+                itemBuilder: (BuildContext context, int index) {
+                  if(model.logistics.isEmpty) _showToast(context, model.errMessage);
+                  return _LogisticListRowWidget(index: index);
+                },
+              ));
+  }
+  void _showToast(BuildContext context, String textToast) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(textToast),
+        action: SnackBarAction(label: 'X', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
   }
 }
 
@@ -38,7 +52,6 @@ class _LogisticListRowWidget extends StatelessWidget {
     final model = context.read<LogisticListViewModel>();
     final logistic = model.logistics[index];
     final imgUrl = model.getImageUrl(logistic.logisticId);
-
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -59,80 +72,118 @@ class _LogisticListRowWidget extends StatelessWidget {
             ),
             clipBehavior: Clip.hardEdge,
             child: Column(children: [
-              Row(
-              children: [
+              Row(children: [
                 Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Image(image: AssetImage(imgUrl), width: 70),
+                  padding: const EdgeInsets.all(15.0),
+                  child: Image(image: AssetImage(imgUrl), width: 50),
                 ),
-
                 const SizedBox(width: 15),
                 Expanded(
-
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 10),
-                          Text(
-                            logistic.nameRu,
-                            style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            '${DateFormat('dd.MM.yyyy').format(logistic.deliveryDate)} (дата доставки)',
-                            style: const TextStyle(color: Colors.grey),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),Text(
-                            '${logistic.price.toString()} грн',
-                            style: const TextStyle(color: Colors.grey),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ]
-                    ))]),
-
-                Row(
+                      const SizedBox(height: 10),
+                      Text(
+                        logistic.nameRu,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        '${DateFormat('dd.MM.yyyy').format(logistic.deliveryDate)} (дата доставки)',
+                        style: const TextStyle(color: Colors.grey),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        '${logistic.price.toString()} грн',
+                        style: const TextStyle(color: Colors.grey),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ]))
+              ]),
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Expanded(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                        Text(logistic.from[0].city, textAlign: TextAlign.left, style: const TextStyle(fontSize: 15)),
-                        Text(logistic.from[0].area, textAlign: TextAlign.left, style: const TextStyle(fontSize: 10)),
-                        Text(logistic.from[0].pointNumber.toString(), textAlign: TextAlign.left, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text(logistic.from[0].pointType?? '', textAlign: TextAlign.left, style: const TextStyle(fontSize: 10),),
-                        Text('${logistic.from[0].dist.toStringAsFixed(2)} км', textAlign: TextAlign.left,),
-                        Text('(${logistic.from.length} шт)', textAlign: TextAlign.left,style: const TextStyle(fontSize: 10)),
-                      ],),
+                          Text(logistic.from[0].city,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(fontSize: 15)),
+                          Text(logistic.from[0].area,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(fontSize: 10)),
+                          Text('№ ${logistic.from[0].pointNumber}',
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text(
+                            logistic.from[0].pointType ?? '',
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(fontSize: 10),
+                          ),
+                          Text(
+                            '${logistic.from[0].dist.toStringAsFixed(2)} км',
+                            textAlign: TextAlign.left,
+                          ),
+                          Text('(${logistic.from.length} шт)',
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(fontSize: 10)),
+                        ],
+                      ),
+                    ),
+                    const Expanded(
+                      child: Divider(
+                        color: Colors.black,
+                        height: 100,
+                        thickness: 2,
+                      ),
                     ),
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(logistic.to[0].city, textAlign: TextAlign.right,style: const TextStyle(fontSize: 15)),
-                          Text(logistic.to[0].area, textAlign: TextAlign.right, style: const TextStyle(fontSize: 10)),
-                          Text(logistic.to[0].pointNumber.toString(), textAlign: TextAlign.right, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                          Text(logistic.to[0].pointType?? '', textAlign: TextAlign.right, style: const TextStyle(fontSize: 10)),
-                          Text('${logistic.to[0].dist.toStringAsFixed(2)} км', textAlign: TextAlign.right),
-                          Text('(${logistic.to.length} шт)', textAlign: TextAlign.right, style: const TextStyle(fontSize: 10)),
-                        ],),
+                          Text(logistic.to[0].city,
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(fontSize: 15)),
+                          Text(logistic.to[0].area,
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(fontSize: 10)),
+                          Text('№ ${logistic.to[0].pointNumber}',
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text(logistic.to[0].pointType ?? '',
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(fontSize: 10)),
+                          Text('${logistic.to[0].dist.toStringAsFixed(2)} км',
+                              textAlign: TextAlign.right),
+                          Text('(${logistic.to.length} шт)',
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(fontSize: 10)),
+                        ],
+                      ),
                     )
-
-
                   ],
-                )]),
-                // Text(
-                //   logistic.price.toString(),
-                //   maxLines: 2,
-                //   overflow: TextOverflow.ellipsis,
-                // ),
-
-
+                ),
+              )
+            ]),
+            // Text(
+            //   logistic.price.toString(),
+            //   maxLines: 2,
+            //   overflow: TextOverflow.ellipsis,
+            // ),
           ),
           Material(
             color: Colors.transparent,

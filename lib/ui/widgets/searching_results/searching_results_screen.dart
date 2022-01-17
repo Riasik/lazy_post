@@ -40,7 +40,7 @@ class SearchingResultsScreen extends StatelessWidget {
           : GoogleMap(
               mapType: MapType.normal,
               initialCameraPosition:
-                  CameraPosition(target: model.senderPoint, zoom: 13),
+                  CameraPosition(target: model.senderPoint, zoom: 14),
               onMapCreated: (GoogleMapController controller) {
                 model.controller.complete(controller);
               },

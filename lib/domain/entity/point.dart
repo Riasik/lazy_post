@@ -10,10 +10,11 @@ class Point{
   String? pointType;
   String area;
   String city;
+  bool postTerminal;
 
 
   Point(this.pointNumber, this.dist, this.lat, this.lng, this.pointType,
-      this.area, this.city);
+      this.area, this.city, this.postTerminal);
 
   factory Point.fromJson(Map<String, dynamic> json) => _$PointFromJson(json);
   Map<String, dynamic> toJson() => _$PointToJson(this);

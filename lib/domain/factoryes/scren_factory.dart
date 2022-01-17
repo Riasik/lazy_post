@@ -1,4 +1,5 @@
 import 'package:lazy_post/domain/entity/logistic.dart';
+import 'package:lazy_post/domain/entity/parcel.dart';
 import 'package:lazy_post/ui/widgets/history/history_model.dart';
 import 'package:lazy_post/ui/widgets/history/history_screen.dart';
 import 'package:lazy_post/ui/widgets/home/home_model.dart';
@@ -38,9 +39,9 @@ class ScreenFactory {
     );
   }
 
-  Widget makeLogisticListScreen(List<Logistic> list) {
+  Widget makeLogisticListScreen(Parcel p) {
     return ChangeNotifierProvider(
-      create: (_) => LogisticListViewModel(list),
+      create: (_) => LogisticListViewModel(p),
       child: const LogisticListScreen(),
     );
   }

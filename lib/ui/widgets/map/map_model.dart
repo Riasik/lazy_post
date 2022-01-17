@@ -15,7 +15,11 @@ class MapViewModel extends ChangeNotifier {
   List<Marker> get markers => _markers;
 
   void sendDataBack(BuildContext context) {
-    Navigator.pop(context, _markers.first.position);
+    if(_markers.isEmpty) {
+      Navigator.pop(context);
+    } else {
+      Navigator.pop(context, _markers.first.position);
+    }
   }
 
   void _updateState() {

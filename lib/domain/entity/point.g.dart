@@ -14,6 +14,7 @@ Point _$PointFromJson(Map<String, dynamic> json) => Point(
       json['point_type'] as String?,
       json['area'] as String,
       json['city'] as String,
+      json['post_terminal'] as bool,
     );
 
 Map<String, dynamic> _$PointToJson(Point instance) => <String, dynamic>{
@@ -24,4 +25,5 @@ Map<String, dynamic> _$PointToJson(Point instance) => <String, dynamic>{
       'point_type': instance.pointType,
       'area': instance.area,
       'city': instance.city,
+      'post_terminal': instance.postTerminal,
     };

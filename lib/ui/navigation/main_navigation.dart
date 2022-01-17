@@ -1,4 +1,5 @@
 import 'package:lazy_post/domain/entity/logistic.dart';
+import 'package:lazy_post/domain/entity/parcel.dart';
 import '/domain/factoryes/scren_factory.dart';
 import 'package:flutter/material.dart';
 
@@ -23,9 +24,9 @@ class MainNavigation {
     switch (settings.name) {
       case MainNavigationRouteNames.logisticList:
         final arguments = settings.arguments;
-        final list = arguments is List<Logistic> ? arguments : null;
+        final parcel = arguments is Parcel ? arguments : null;
         return MaterialPageRoute(
-          builder: (_) => _screenFactory.makeLogisticListScreen(list!),
+          builder: (_) => _screenFactory.makeLogisticListScreen(parcel!),
         );
       case MainNavigationRouteNames.mapScreen:
         return MaterialPageRoute(
