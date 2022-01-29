@@ -130,7 +130,7 @@ class ParcelImg extends StatelessWidget {
   Widget build(BuildContext context) {
     for (var i in model.buttons) {
       if (i.active) imgUrl = i.url;
-      buttons.add(MyButton(key: , name: i.name, checked: i.active));
+      buttons.add(MyButton(key: ValueKey(i.size.index), name: i.name, checked: i.active));
     }
     return Container(
       child: Column(children: [
