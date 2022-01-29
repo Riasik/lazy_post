@@ -1,3 +1,4 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lazy_post/domain/entity/logistic.dart';
 import 'package:lazy_post/domain/entity/parcel.dart';
 import '/domain/factoryes/scren_factory.dart';
@@ -29,8 +30,10 @@ class MainNavigation {
           builder: (_) => _screenFactory.makeLogisticListScreen(parcel!),
         );
       case MainNavigationRouteNames.mapScreen:
+        final arguments = settings.arguments;
+        final location = arguments is LatLng ? arguments : null;
         return MaterialPageRoute(
-          builder: (_) => _screenFactory.makeMapScreen(),
+          builder: (_) => _screenFactory.makeMapScreen(location),
         );
         case MainNavigationRouteNames.homeHistory:
         return MaterialPageRoute(

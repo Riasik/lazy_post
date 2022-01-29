@@ -1,3 +1,4 @@
+import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:lazy_post/domain/entity/logistic.dart';
 import 'package:lazy_post/domain/entity/parcel.dart';
 import 'package:lazy_post/ui/widgets/history/history_model.dart';
@@ -46,9 +47,9 @@ class ScreenFactory {
     );
   }
 
-  Widget makeMapScreen() {
+  Widget makeMapScreen(LatLng? location) {
     return ChangeNotifierProvider(
-        create: (_) => MapViewModel(),
+        create: (_) => MapViewModel(location),
         child: MapScreen() ,
     );
   }

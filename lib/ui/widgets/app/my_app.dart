@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Hot Post',
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
           backgroundColor: Color.fromRGBO(3, 37, 65, 1),

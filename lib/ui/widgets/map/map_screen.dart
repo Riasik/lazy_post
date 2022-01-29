@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lazy_post/ui/widgets/map/map_model.dart';
@@ -12,14 +13,12 @@ class MapScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<MapViewModel>();
-    return MaterialApp(
-        //title: 'Flutter Google Maps Demo',
-        home: Scaffold(
-      body: GoogleMap(
+    return Scaffold(
+          body: GoogleMap(
           mapType: MapType.normal,
           initialCameraPosition: model.startPoint,
           onMapCreated: (GoogleMapController controller) {
-            _controller.complete(controller);
+            model.controller.complete(controller);
           },
           onTap: (LatLng tab) {
             model.markers = [
@@ -34,16 +33,29 @@ class MapScreen extends StatelessWidget {
           myLocationButtonEnabled: true,
           myLocationEnabled: true,
           markers: model.markers.map((e) => e).toSet(),
-          padding: const EdgeInsets.only(right: 1 )),
+          padding: const EdgeInsets.only(right: 1)),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 60.0),
-        child: FloatingActionButton(
-          onPressed: () {
-            model.sendDataBack(context);
-          },
-          child: const Icon(Icons.check),
+        padding: const EdgeInsets.only(bottom: 90.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment:  CrossAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                model.currentPosition();
+              },
+              child: const Icon(Icons.my_location_outlined),
+            ),
+            const SizedBox(height: 10,),
+            FloatingActionButton(
+              onPressed: () {
+                model.sendDataBack(context);
+              },
+              child: const Icon(Icons.check),
+            ),
+          ],
         ),
       ),
-    ));
+    );
   }
 }

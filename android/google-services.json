@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "846257078176",
+    "project_id": "lazy-post",
+    "storage_bucket": "lazy-post.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846257078176:android:59e1b42f86e338b5296ec5",
+        "android_client_info": {
+          "package_name": "com.ryasik.lazy_post"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "846257078176-98o03fcsi2mroddsa4kh61tc1flo3hc2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ryasik.lazy_post",
+            "certificate_hash": "95c71c1bee8f1c316685fad8ded47b33e603df51"
+          }
+        },
+        {
+          "client_id": "846257078176-m5076pid0njk31hoesae01gi85fch7pr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlEZ-B-M_mCjnIyT7ecO0h337Q1ni9shU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "846257078176-m5076pid0njk31hoesae01gi85fch7pr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

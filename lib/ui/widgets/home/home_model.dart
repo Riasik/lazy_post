@@ -8,6 +8,16 @@ import 'package:lazy_post/domain/db/parcel_db.dart';
 import 'package:lazy_post/domain/entity/parcel.dart';
 import 'package:lazy_post/ui/navigation/main_navigation.dart';
 
+enum Size{xs,s,m,l,xl}
+
+class B{
+  String name;
+  String url;
+  Size size;
+  bool active;
+  B(this.size, this.active,this.name,this.url);
+
+}
 class HomeViewModel extends ChangeNotifier {
   final _localStorage = LocalStorage();
   double weight = 0.1, senderDistance = 0.5, receiverDistance = 0.5;
@@ -18,8 +28,13 @@ class HomeViewModel extends ChangeNotifier {
   final priceTextController = TextEditingController(text: '1');
   LatLng? senderLocation, receiverLocation;
   bool senderOffice = true, senderTerminal = true, receiverOffice = true, receiverTerminal = true;
-  //String errMessage = '';
 
+  final List<B> buttons = [
+    B(Size.xs,true,'XS','images/parcel/XS.jpg'),
+    B(Size.s,false,'S','images/parcel/S.jpg'),
+    B(Size.m,false,'M','images/parcel/M.jpg'),
+    B(Size.l,false,'L','images/parcel/L.jpg'),
+    B(Size.xl,false,'XL','images/parcel/XL.jpg')];
 
   void calculateVolume() {
     volumeTextController.text = ((double.parse(lengthTextController.text) *
@@ -57,23 +72,18 @@ class HomeViewModel extends ChangeNotifier {
         receiverOffice: receiverOffice,
         receiverTerminal: receiverTerminal
     );
-
       saveToHistory(p);
       Navigator.of(context).pushNamed(
         MainNavigationRouteNames.logisticList,
         arguments: p);
     }
-    // else {
-    //   errMessage = 'Заполните все поля!\nУкажите точку отправки и получения!';
-    //   _updateState();
-    // }
   }
 
   Future<void> setPosition(BuildContext context, {required String whom}) async {
     if (whom == Const.sender) {
       LatLng? location = await Navigator.of(context).pushNamed(
           MainNavigationRouteNames.mapScreen,
-          arguments: whom) as LatLng?;
+          arguments: senderLocation ?? null) as LatLng?;
       if(location != null){
         senderLocation = location;
         _updateState();
@@ -81,7 +91,7 @@ class HomeViewModel extends ChangeNotifier {
     } else if (whom == Const.receiver) {
       LatLng? location = await Navigator.of(context).pushNamed(
           MainNavigationRouteNames.mapScreen,
-          arguments: whom) as LatLng?;
+          arguments: receiverLocation ?? null) as LatLng?;
       if(location != null){
         receiverLocation = location;
         _updateState();
@@ -137,7 +147,6 @@ class HomeViewModel extends ChangeNotifier {
     priceTextController.text = '1';
     senderLocation = null; receiverLocation = null;
     senderOffice = true; senderTerminal = true; receiverOffice = true; receiverTerminal = true;
-    //errMessage = '';
     _updateState();
   }
 
