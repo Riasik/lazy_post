@@ -30,7 +30,7 @@ class HomeScreenWidget extends StatelessWidget {
       ),
     );
   }
-
+//
   AppBar _getAppBar(BuildContext context) {
     return AppBar(title: const Text('Hot Post'), actions: [
       // IconButton(
