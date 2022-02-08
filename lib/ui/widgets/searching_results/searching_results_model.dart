@@ -13,8 +13,6 @@ class SearchingResultsViewModel extends ChangeNotifier {
   final _localStorage = LocalStorage();
   final _otherMarkers = MarkerGenerator(100);
   final Completer<GoogleMapController> controller = Completer();
-
-  //final startPoint = const CameraPosition(target: Const.kiev, zoom: 20);
   final Logistic _logistic;
   late LatLng senderPoint, receiverPoint;
   late List<Marker> currentList;

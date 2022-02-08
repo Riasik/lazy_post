@@ -5,5 +5,6 @@ abstract class AppColors {
   static const btnColorBlue = Colors.blue;
   static const btnColorGrey = Colors.blueGrey;
   static const colorWarning = Colors.redAccent;
+  static const colorActive = Colors.black87;
 
 }

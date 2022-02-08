@@ -22,7 +22,6 @@ class Parcel{
   bool receiverOffice = true;
   bool receiverTerminal = true;
 
-
   Parcel({
       required this.weight,
       required this.length,

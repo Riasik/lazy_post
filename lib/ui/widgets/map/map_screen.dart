@@ -41,6 +41,7 @@ class MapScreen extends StatelessWidget {
           crossAxisAlignment:  CrossAxisAlignment.end,
           children: [
             FloatingActionButton(
+              heroTag: 'my_location',
               onPressed: () {
                 model.currentPosition();
               },
@@ -48,6 +49,7 @@ class MapScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10,),
             FloatingActionButton(
+              heroTag: 'ok',
               onPressed: () {
                 model.sendDataBack(context);
               },
