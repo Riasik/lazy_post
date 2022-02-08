@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:lazy_post/configuration/consts.dart';
-import 'package:lazy_post/ui/navigation/main_navigation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lazy_post/ui/theme/app_colors.dart';
 import 'package:provider/src/provider.dart';
+import 'h_widgets/edit_location_widget.dart';
+import 'h_widgets/inputs.dart';
+import 'h_widgets/my_location_widget.dart';
+import 'h_widgets/slider.dart';
 import 'home_model.dart';
-import 'slider_view.dart';
 
 class HomeScreenWidget extends StatelessWidget {
   const HomeScreenWidget({Key? key}) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +30,15 @@ class HomeScreenWidget extends StatelessWidget {
       ),
     );
   }
-
+//
   AppBar _getAppBar(BuildContext context) {
-    return AppBar(title: const Text('Lazy Post'), actions: [
-      IconButton(
-        icon: const Icon(Icons.history, color: Colors.white),
-        onPressed: () {
-          Navigator.of(context).pushNamed(MainNavigationRouteNames.homeHistory);
-        },
-      ),
+    return AppBar(title: const Text('Hot Post'), actions: [
+      // IconButton(
+      //   icon: const Icon(Icons.history, color: Colors.white),
+      //   onPressed: () {
+      //     Navigator.of(context).pushNamed(MainNavigationRouteNames.homeHistory);
+      //   },
+      // ),
     ]);
   }
 }
@@ -49,22 +50,32 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.watch<HomeViewModel>();
 
-    return ListView(
-      children: [
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                //weight
-                Column(
-                  //mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                     Text(
-                        'Вес (кг)',
-                        textAlign: TextAlign.left,
+    return ListView(children: [
+      SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            //crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                height: 40,
+                child: Stack(
+                  children: [
+                    Positioned(
+                        right: 10,
+                        top: 0,
+                        height: 20,
+                        child: IconButton(
+                            onPressed: () {
+                              model.viewEditWindow();
+                            },
+                            icon: Icon(Icons.edit,
+                                color: model.viewEdits
+                                    ? AppColors.btnColorBlue
+                                    : AppColors.colorActive))),
+                    Center(
+                      child: Text(
+                        'Информация о посылке:',
                         style: TextStyle(
                             color: Colors.grey.shade700,
                             fontSize: MediaQuery.of(context).size.width > 360
@@ -72,422 +83,175 @@ class _Body extends StatelessWidget {
                                 : 16,
                             fontWeight: FontWeight.normal),
                       ),
-                    SliderView(
-                      distValue: model.weight,
-                      units: 'кг',
-                      onChangedistValue: (double value) {
-                        model.weight = value;
-                        //data.weight = value;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 8,
                     ),
                   ],
                 ),
-                //inputs
-                 Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true, signed: true),
-                              decoration: const InputDecoration(
-                                  hintText: 'Длинна', labelText: 'Длинна (см)'),
-                              controller: model.lengthTextController,
-                              onChanged: (v) {
-                                model.calculateVolume();
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true, signed: true),
-                              decoration: const InputDecoration(
-                                  hintText: 'Ширина', labelText: 'Ширина (см)'),
-                              controller: model.widthTextController,
-                              onChanged: (v) {
-                                model.calculateVolume();
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true, signed: true),
-                              decoration: const InputDecoration(
-                                  hintText: 'Высота', labelText: 'Высота (см)'),
-                              controller: model.heightTextController,
-                              onChanged: (v) {
-                                model.calculateVolume();
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true, signed: true),
-                              decoration: const InputDecoration(
-                                  hintText: 'Объём', labelText: 'Объём (м3)'),
-                              controller: model.volumeTextController,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: TextField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true, signed: true),
-                              decoration: const InputDecoration(
-                                  hintText: 'Стоимость',
-                                  labelText: 'Стоимость (грн)'),
-                              controller: model.priceTextController,
-                            ),
-                          ),
-                        ],
+              ),
+              const SizedBox(height: 5),
+              Container(
+                  width: 500,
+                  height: 270,
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white54,
+                    //border: Border.all( color: Colors.black, width: 8),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3), // changes position of shadow
                       ),
                     ],
                   ),
-                const SizedBox(
-                  height: 10,
-                ),
-
-                //-------  from --------------
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child:  Text(
-                              'Отправитель',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  color: Colors.grey.shade700,
-                                  fontSize:
-                                      MediaQuery.of(context).size.width > 360
-                                          ? 18
-                                          : 16,
-                                  fontWeight: FontWeight.normal),
-                            ),
-
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: model.senderOffice
+                  child: model.viewEdits
+                      ? Inputs(model: model)
+                      : CarouselWithIndicatorDemo(
+                          onChangedIcon: (int index) {
+                            model.changeSizes(index);
+                          },
+                          current: model.parcelImgIndex)),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                  height: 50,
+                  child: Stack(children: [
+                    Positioned(
+                        right: 10,
+                        top: 0,
+                        height: 20,
+                        child: IconButton(
+                            onPressed: () {
+                              model.viewEditLocationW();
+                            },
+                            color: model.viewEditLocation
                                 ? AppColors.btnColorBlue
-                                : AppColors.btnColorGrey,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(38.0),
-                            ),
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(0.4),
-                                  offset: const Offset(0, 2),
-                                  blurRadius: 8.0),
-                            ],
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(32.0),
-                              ),
-                              onTap: () {
-                                model.changeTerminalOffice(Const.senderOffice);
-                              },
-                              child: const Padding(
-                                  padding: EdgeInsets.all(7.0),
-                                  child: Icon(Icons.store,
-                                      size: 30,
-                                      color: Colors
-                                          .white) // HotelAppTheme.buildLightTheme().backgroundColor),
-                                  ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: model.senderTerminal
-                                ? AppColors.btnColorBlue
-                                : AppColors.btnColorGrey,
-                            //HotelAppTheme.buildLightTheme().primaryColor,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(38.0),
-                            ),
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(0.4),
-                                  offset: const Offset(0, 2),
-                                  blurRadius: 8.0),
-                            ],
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(32.0),
-                              ),
-                              onTap: () {
-                                model
-                                    .changeTerminalOffice(Const.senderTerminal);
-                              },
-                              child: const Padding(
-                                  padding: EdgeInsets.all(7.0),
-                                  child: Icon(Icons.corporate_fare,
-                                      size: 30,
-                                      color: Colors
-                                          .white) // HotelAppTheme.buildLightTheme().backgroundColor),
-                                  ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child:  FloatingActionButton(
-                              backgroundColor: model.check(model.senderLocation)
-                                  ? AppColors.btnColorBlue
-                                  : AppColors.btnColorGrey,
-                              heroTag: "Sender",
-                              child: Icon(
-                                model.check(model.senderLocation)
-                                    ? Icons.location_on
-                                    : Icons.add_location,
-                                size: 50,
-                              ),
-                              onPressed: () {
-                                model.setPosition(context, whom: Const.sender);
-                              },
-                            ),
-
-                        )
-                      ],
-                    ),
-                    SliderView(
-                      distValue: model.senderDistance,
-                      units: 'км',
-                      onChangedistValue: (double value) {
-                        model.senderDistance = value;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 8,
+                                : AppColors.colorActive,
+                            icon: Icon(Icons.edit))),
+                    Center(
+                        child: Text(
+                      'Отправитель / Получатель:',
+                      style: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize:
+                              MediaQuery.of(context).size.width > 360 ? 18 : 16,
+                          fontWeight: FontWeight.normal),
+                    )),
+                  ])),
+              Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white54,
+                  //border: Border.all( color: Colors.black, width: 8),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3), // changes position of shadow
                     ),
                   ],
                 ),
-
-                //-------  to --------------
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            'Получатель',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                color: Colors.grey.shade700,
-                                fontSize:
-                                    MediaQuery.of(context).size.width > 360
-                                        ? 18
-                                        : 16,
-                                fontWeight: FontWeight.normal),
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: model.receiverOffice
-                                ? AppColors.btnColorBlue
-                                : AppColors.btnColorGrey,
-                            //HotelAppTheme.buildLightTheme().primaryColor,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(38.0),
-                            ),
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(0.4),
-                                  offset: const Offset(0, 2),
-                                  blurRadius: 8.0),
-                            ],
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(32.0),
-                              ),
-                              onTap: () {
-                                model
-                                    .changeTerminalOffice(Const.receiverOffice);
-                              },
-                              child: const Padding(
-                                  padding: EdgeInsets.all(7.0),
-                                  child: Icon(Icons.store,
-                                      size: 30,
-                                      color: Colors
-                                          .white) // HotelAppTheme.buildLightTheme().backgroundColor),
-                                  ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: model.receiverTerminal
-                                ? AppColors.btnColorBlue
-                                : AppColors.btnColorGrey,
-                            //HotelAppTheme.buildLightTheme().primaryColor,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(38.0),
-                            ),
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(0.4),
-                                  offset: const Offset(0, 2),
-                                  blurRadius: 8.0),
-                            ],
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(32.0),
-                              ),
-                              onTap: () {
-                                model.changeTerminalOffice(
-                                    Const.receiverTerminal);
-                              },
-                              child: const Padding(
-                                  padding: EdgeInsets.all(7.0),
-                                  child: Icon(Icons.corporate_fare,
-                                      size: 30,
-                                      color: Colors
-                                          .white) // HotelAppTheme.buildLightTheme().backgroundColor),
-                                  ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 1),
-                            child: FloatingActionButton(
-                              backgroundColor:
-                                  model.check(model.receiverLocation)
-                                      ? AppColors.btnColorBlue
-                                      : AppColors.btnColorGrey,
-                              heroTag: "receiver",
-                              child: Icon(
-                                model.check(model.receiverLocation)
-                                    ? Icons.location_on
-                                    : Icons.add_location,
-                                size: 50,
-                              ),
-                              onPressed: () {
-                                model.setPosition(context,
-                                    whom: Const.receiver);
-                              },
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    SliderView(
-                      distValue: model.receiverDistance,
-                      units: 'км',
-                      onChangedistValue: (double value) {
-                        model.receiverDistance = value;
-                      },
+                child: Row(
+                  children: [
+                    Container(
+                      width: 179,
+                      child: model.viewEditLocation
+                          ? EditLocationWidget(
+                              coordinates: Coordinates.sender,
+                              title: 'Отправка с:',
+                              model: model)
+                          : MyLocationWidget(
+                              model: model,
+                              title: 'Укажите точку отправки',
+                              coordinates: Coordinates.sender,
+                              hasCoordinates:
+                                  model.check(model.senderLocation)),
                     ),
                     const SizedBox(
-                      height: 8,
+                      width: 10,
                     ),
+                    Container(
+                      width: 179,
+                      child: model.viewEditLocation
+                          ? EditLocationWidget(
+                              coordinates: Coordinates.receiver,
+                              title: 'Получить в:',
+                              model: model)
+                          : MyLocationWidget(
+                              model: model,
+                              title: 'Укажите точку получения',
+                              coordinates: Coordinates.receiver,
+                              hasCoordinates:
+                                  model.check(model.receiverLocation)),
+                    ),
+                    // Text(
+                    //   'Просмотрите ближайшие отделения',
+                    //   style: TextStyle(
+                    //       color: Colors.grey.shade700,
+                    //       fontSize:
+                    //       MediaQuery.of(context).size.width > 360 ? 18 : 16,
+                    //       fontWeight: FontWeight.normal),
+                    // )
                   ],
                 ),
-                Container(
-                        decoration: BoxDecoration(
-                          color: model.checkAllParams()
-                              ? AppColors.btnColorBlue
-                              : AppColors.btnColorGrey,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(38.0),
-                          ),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                offset: const Offset(0, 2),
-                                blurRadius: 8.0),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16, right: 16, top: 4, bottom: 4),
-                          child: InkWell(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(24.0)),
-                            highlightColor: AppColors.btnColorBlue,
-                            onTap: () {
-
-                              if(!model.checkAllParams()) {
-                                _showToast(context, 'Заполните все поля!\nУкажите точку отправки и получения!');
-                              }else{
-                                model.checkLogisticResult(context);
-                              }
-                              },
-                            child: const Center(
-                              child: Text(
-                                'Поиск',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 25,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        )),
-                const SizedBox(height: 10),
-                // Center(
-                //
-                //     child: Text(model.errMessage,
-                //         textAlign: TextAlign.center,
-                //         style: const TextStyle(color: AppColors.colorWarning))),
-              ],
-            ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              SizedBox(
+                height: 50,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    ' Для поиска оптимально варианта доставки нажмите:',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize:
+                            MediaQuery.of(context).size.width > 360 ? 18 : 16,
+                        fontWeight: FontWeight.normal),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 5),
+              TextButton(
+                  style: ButtonStyle(
+                      minimumSize: MaterialStateProperty.all(Size(200, 50)),
+                      backgroundColor: MaterialStateProperty.all(
+                        model.checkAllParams()
+                            ? AppColors.btnColorBlue
+                            : AppColors.btnColorGrey,
+                      ),
+                      shadowColor: MaterialStateProperty.all(Colors.blue),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40)))),
+                  onPressed: () {
+                    if (!model.checkAllParams()) {
+                      _showToast(
+                          'Заполните все поля!\nУкажите точку отправки и получения!');
+                    } else {
+                      model.checkLogisticResult(context);
+                    }
+                  },
+                  child: Text('Поиск',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 25,
+                          color: Colors.white))),
+            ],
           ),
-        )
-      ],
-    );
+        ),
+      )
+    ]);
   }
-  void _showToast(BuildContext context, String textToast) {
-    final scaffold = ScaffoldMessenger.of(context);
-    scaffold.showSnackBar(
-      SnackBar(
-        content: Text(textToast),
-        action: SnackBarAction(label: 'X', onPressed: scaffold.hideCurrentSnackBar),
-      ),
-    );
-  }
+
+  void _showToast(String err) => Fluttertoast.showToast(
+      msg: err,
+      textColor: Colors.white,
+      backgroundColor: AppColors.btnColorGrey,
+      fontSize: 18);
 }

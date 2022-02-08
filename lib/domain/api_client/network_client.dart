@@ -47,7 +47,6 @@ class NetworkClient {
     try {
       final url = _makeUri(path, urlParameters);
       final request = await _client.postUrl(url);
-
       request.headers.contentType = ContentType.json;
       request.write(jsonEncode(bodyParameters));
       final response = await request.close();

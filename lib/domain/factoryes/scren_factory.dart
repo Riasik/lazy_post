@@ -1,5 +1,7 @@
+import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:lazy_post/domain/entity/logistic.dart';
 import 'package:lazy_post/domain/entity/parcel.dart';
+import 'package:lazy_post/domain/entity/parcel_for_near.dart';
 import 'package:lazy_post/ui/widgets/history/history_model.dart';
 import 'package:lazy_post/ui/widgets/history/history_screen.dart';
 import 'package:lazy_post/ui/widgets/home/home_model.dart';
@@ -7,6 +9,8 @@ import 'package:lazy_post/ui/widgets/map/map_model.dart';
 import 'package:lazy_post/ui/widgets/map/map_screen.dart';
 import 'package:lazy_post/ui/widgets/logistic_list/logistic_list_model.dart';
 import 'package:lazy_post/ui/widgets/logistic_list/logistic_list_screen.dart';
+import 'package:lazy_post/ui/widgets/near_points_map/near_points_model.dart';
+import 'package:lazy_post/ui/widgets/near_points_map/near_points_screen.dart';
 import 'package:lazy_post/ui/widgets/searching_results/searching_results_screen.dart';
 import 'package:lazy_post/ui/widgets/searching_results/searching_results_model.dart';
 import '/ui/widgets/home/home_screen.dart';
@@ -46,10 +50,16 @@ class ScreenFactory {
     );
   }
 
-  Widget makeMapScreen() {
+  Widget makeMapScreen(LatLng? location) {
     return ChangeNotifierProvider(
-        create: (_) => MapViewModel(),
+        create: (_) => MapViewModel(location),
         child: MapScreen() ,
+    );
+  }
+  Widget makeNearPointsScreen(ParcelNear parcel) {
+    return ChangeNotifierProvider(
+        create: (_) => NearPointsViewModel(parcel:parcel),
+        child: NearPointsScreen() ,
     );
   }
   Widget makeSearchingResultsScreen(Logistic logistic) {

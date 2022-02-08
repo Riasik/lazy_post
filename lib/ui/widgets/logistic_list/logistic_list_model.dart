@@ -21,11 +21,11 @@ class LogisticListViewModel extends ChangeNotifier{
 
   String getImageUrl (int logisticId){
     var image = {
-      2 : 'images/novaposhta.png',
-      5 : 'images/justin.png',
-      6 : 'images/meest.png'
+      2 : 'images/post/novaposhta.png',
+      5 : 'images/post/justin.png',
+      6 : 'images/post/meest.png'
     };
-    return image[logisticId] ?? 'images/dostavka_mvk.png';
+    return image[logisticId] ?? 'images/post/dostavka_mvk.png';
   }
   void onLogisticTap(BuildContext context, int index) {
     final data = _logistics[index];
@@ -41,7 +41,7 @@ class LogisticListViewModel extends ChangeNotifier{
       if (response.data.isNotEmpty) {
         _logistics = response.data;
       } else {
-        errMessage = 'Не найдено!\nПопробуйте увелить расстояние.';
+        errMessage = 'Не найдено!\nПопробуйте увеличить расстояние.';
       }
     } on ApiClientException catch (e) {
       errMessage = 'Ошибка: $e';

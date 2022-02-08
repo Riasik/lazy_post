@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
-
 class SliderView extends StatefulWidget {
-  const SliderView({Key? key, this.onChangedistValue, required this.distValue, required this.units})
+  const SliderView({Key? key, this.onChangedistValue,
+    required this.min,
+    required this.max,
+    required this.distValue,
+    required this.units})
       : super(key: key);
 
   final Function(double)? onChangedistValue;
   final double? distValue;
+  final double min;
+  final double max;
   final String? units;
 
   @override
@@ -14,7 +19,7 @@ class SliderView extends StatefulWidget {
 }
 
 class _SliderViewState extends State<SliderView> {
-  double distValue = 50.0;
+  double distValue = 0;
 
   @override
   void initState() {
@@ -35,7 +40,7 @@ class _SliderViewState extends State<SliderView> {
             Container(
               width: 170,
               child: Text(
-                '${(distValue).toStringAsFixed(1)} ${widget.units}',
+                distValue > 0.01 ? '${(distValue).toStringAsFixed(1)} ${widget.units}' : 'ближайшие',
                 textAlign: TextAlign.center,
               ),
             ),
@@ -58,8 +63,8 @@ class _SliderViewState extends State<SliderView> {
                 widget.onChangedistValue!(distValue);
               } catch (_) {}
             },
-            min: 0.1,
-            max: 50,
+            min: widget.min,
+            max: widget.max,
             activeColor: Colors.blueGrey, //HotelAppTheme.buildLightTheme().primaryColor,
             inactiveColor: Colors.grey.withOpacity(0.4),
             divisions: 100,

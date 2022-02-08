@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:lazy_post/ui/theme/app_colors.dart';
 import 'package:provider/src/provider.dart';
 
 import 'logistic_list_model.dart';
@@ -9,36 +11,37 @@ class LogisticListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<LogisticListViewModel>();
     return Scaffold(
         appBar: AppBar(
           title: const Text('Компании'),
         ),
-        body: model.loading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : ListView.builder(
-                padding: const EdgeInsets.only(top: 10),
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
-                itemCount: model.logistics.length,
-                itemExtent: 220,
-                itemBuilder: (BuildContext context, int index) {
-                  if(model.logistics.isEmpty) _showToast(context, model.errMessage);
-                  return _LogisticListRowWidget(index: index);
-                },
-              ));
+        body: getBody(context));
   }
-  void _showToast(BuildContext context, String textToast) {
-    final scaffold = ScaffoldMessenger.of(context);
-    scaffold.showSnackBar(
-      SnackBar(
-        content: Text(textToast),
-        action: SnackBarAction(label: 'X', onPressed: scaffold.hideCurrentSnackBar),
-      ),
-    );
+
+  Widget getBody(BuildContext context) {
+    final model = context.watch<LogisticListViewModel>();
+    if (model.loading) {
+      return const Center(child: CircularProgressIndicator());
+    } else {
+      if (model.logistics.length == 0) {
+        _showToast('${model.errMessage}');
+      }
+      return ListView.builder(
+        padding: const EdgeInsets.only(top: 10),
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        itemCount: model.logistics.length,
+        itemExtent: 220,
+        itemBuilder: (BuildContext context, int index) {
+          return _LogisticListRowWidget(index: index);
+        },
+      );
+    }
   }
+  void _showToast(String err) => Fluttertoast.showToast(
+      msg: err,
+      textColor: Colors.white,
+      backgroundColor: AppColors.btnColorGrey,
+      fontSize: 18);
 }
 
 class _LogisticListRowWidget extends StatelessWidget {
@@ -82,28 +85,29 @@ class _LogisticListRowWidget extends StatelessWidget {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                      const SizedBox(height: 10),
-                      Text(
-                        logistic.nameRu,
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        '${DateFormat('dd.MM.yyyy').format(logistic.deliveryDate)} (дата доставки)',
-                        style: const TextStyle(color: Colors.grey),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        '${logistic.price.toString()} грн',
-                        style: const TextStyle(color: Colors.grey),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ]))
+                          const SizedBox(height: 10),
+                          Text(
+                            logistic.nameRu,
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            '${DateFormat('dd.MM.yyyy').format(
+                                logistic.deliveryDate)} (дата доставки)',
+                            style: const TextStyle(color: Colors.grey),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            '${logistic.price.toString()} грн',
+                            style: const TextStyle(color: Colors.grey),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ]))
               ]),
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15),
